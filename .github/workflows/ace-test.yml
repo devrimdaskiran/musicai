@@ -1,0 +1,45 @@
+name: ACE-Step hız testi
+
+# Kısa bir Türkçe deneme şarkısı üretir, süreyi ölçer. Sonuç Actions -> Artifacts'ta (ve Telegram'da).
+on:
+  workflow_dispatch:
+    inputs:
+      seconds:
+        description: "Deneme süresi (sn)"
+        default: "45"
+      lm:
+        description: "0.6B ya da none"
+        default: "0.6B"
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 240
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
+      - name: Disk aç (modeller ~11 GB)
+        run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL && df -h /
+
+      - name: ACE-Step kur
+        run: |
+          pip install -q -r requirements.txt
+          bash scripts/setup_ace.sh
+      - name: Deneme şarkısı
+        env:
+          ACESTEP_DIR: ace
+          MUSICAI_LM: ${{ github.event.inputs.lm }}
+          TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          HF_HUB_DISABLE_PROGRESS_BARS: "1"
+        run: python -m musicai.speedtest --seconds ${{ github.event.inputs.seconds }}
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ace-test-${{ github.run_id }}
+          path: out/test/
+          retention-days: 3
+          if-no-files-found: ignore
