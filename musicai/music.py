@@ -2,7 +2,7 @@
 
 Ücretsiz çalışır: GitHub Actions'ın CPU makinesinde (GPU yoksa) ya da GPU'lu bir bilgisayarda.
 ACESTEP_DIR: ACE-Step kaynak kodunun klasörü (model dosyaları onun checkpoints/ klasörüne iner).
-MUSICAI_LM : "1.7B" (varsayılan; ana paketle gelir, ACE-Step'in önerdiği), "0.6B" (daha hafif) ya da "none" (en hızlı).
+MUSICAI_LM : "0.6B" (varsayılan; ücretsiz CPU makinesinde ~5 dk/45 sn), "1.7B" (CPU için çok yavaş) ya da "none".
 MUSICAI_STEPS: difüzyon adımı (turbo için 8 yeterli).
 """
 from __future__ import annotations
