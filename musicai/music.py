@@ -46,7 +46,7 @@ def _load():
     log.info("ACE-Step DiT hazır (%.0f sn): %s", time.time() - t0, msg[:200])
 
     llm = LLMHandler()
-    lm = os.environ.get("MUSICAI_LM", "1.7B")
+    lm = os.environ.get("MUSICAI_LM", "0.6B")
     if lm.lower() != "none":
         t0 = time.time()
         try:  # 1.7B ana paketle gelir; 0.6B/4B ayrıca indirilir

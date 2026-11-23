@@ -8,8 +8,8 @@ on:
         description: "Deneme süresi (sn)"
         default: "45"
       lm:
-        description: "1.7B, 0.6B ya da none"
-        default: "1.7B"
+        description: "0.6B (önerilen), 1.7B (çok yavaş) ya da none"
+        default: "0.6B"
 
 jobs:
   test:

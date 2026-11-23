@@ -56,7 +56,7 @@ yanlış kanala gitmesin diye). O zaman videolar Telegram'a gelir, elle yüklers
 - Gün ve saat: `.github/workflows/produce.yml` → `cron` (UTC; `20 13 * * 2,5` = Salı ve Cuma 16:20 TR)
 - Yeni tarz: `data/styles.json`a ekle. Sanatçı adı yazma, sesi tarif et.
 - Sırada bekleyen tarz: `data/queue.json` (ör. `["phonk", "akustik-pop"]`)
-- Dil modeli: varsayılan `1.7B`. Hızlı mod için üretimi elle başlatırken `lm` = `0.6B` ya da `none`
+- Dil modeli: varsayılan `0.6B`. `1.7B` ücretsiz CPU makinesinde çok yavaş (45 sn şarkı 30+ dk)
 
 ## Yerel deneme (model ve Telegram olmadan)
 

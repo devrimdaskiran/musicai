@@ -10,8 +10,8 @@ on:
         description: "Tarz kimliği (boş = otomatik). Örn: anadolu-rock-70s, slap-house, akustik-pop, phonk"
         default: ""
       lm:
-        description: "ACE-Step dil modeli: 1.7B (en iyi), 0.6B (hafif) ya da none (en hızlı)"
-        default: "1.7B"
+        description: "ACE-Step dil modeli: 0.6B (önerilen), 1.7B (çok yavaş, saatler sürebilir) ya da none (en hızlı)"
+        default: "0.6B"
 
 permissions:
   contents: write
@@ -60,7 +60,7 @@ jobs:
           POLLINATIONS_TOKEN: ${{ secrets.POLLINATIONS_TOKEN }}
           ACESTEP_DIR: ace
           MUSICAI_STYLE: ${{ github.event.inputs.style || '' }}
-          MUSICAI_LM: ${{ github.event.inputs.lm || '1.7B' }}
+          MUSICAI_LM: ${{ github.event.inputs.lm || '0.6B' }}
           MUSICAI_AUTO: ${{ github.event_name == 'schedule' && '1' || '' }}
           HF_HUB_DISABLE_PROGRESS_BARS: "1"
         run: python -m musicai.main
