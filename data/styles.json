@@ -5,7 +5,10 @@
     "sound": "1970s Turkish psychedelic Anatolian rock, fuzz electric guitar riffs, electric baglama (saz) melodies, warm Hammond organ, live drums with tape saturation, groovy bass, analog vintage recording",
     "vocal": "male",
     "vocal_tone": "powerful gritty baritone male vocal, theatrical and soulful",
-    "bpm": [92, 112],
+    "bpm": [
+      92,
+      112
+    ],
     "videos": "nostalji editleri, 'babamın gençliği' videoları, eski fotoğraf/plak editleri, yol videoları",
     "theme_hint": "hikâye anlatan ozan damarı: göç, emek, sevda, memleket özlemi, dostluk; ağır ve şiirsel ama sade dil"
   },
@@ -15,7 +18,10 @@
     "sound": "intimate acoustic pop, fingerpicked acoustic guitar, soft piano, light shaker and claps, warm room reverb",
     "vocal": "female",
     "vocal_tone": "soft breathy emotional female vocal, close-mic",
-    "bpm": [80, 96],
+    "bpm": [
+      80,
+      96
+    ],
     "videos": "duygusal editler, sevgiliye/arkadaşa adanan videolar, yağmurlu pencere, kafe vlogları",
     "theme_hint": "küçük anlar, gündelik detaylar, sıcak ve samimi bir ilişki"
   },
@@ -24,8 +30,11 @@
     "label": "Slap House",
     "sound": "slap house, deep slapping bass, punchy four-on-the-floor kick, plucky synth lead, vocal chops, sidechain pumping, festival car-audio energy",
     "vocal": "female",
-    "vocal_tone": "catchy confident female pop vocal with light autotune",
-    "bpm": [122, 126],
+    "vocal_tone": "catchy confident female pop vocal",
+    "bpm": [
+      122,
+      126
+    ],
     "videos": "araba editleri, gece sürüşü, spor salonu, hızlı geçişli editler",
     "theme_hint": "gece, hız, özgürlük, kendine güven"
   },
@@ -34,8 +43,11 @@
     "label": "Melodic Trap",
     "sound": "melodic trap, rolling 808 bass, crisp hi-hat rolls, ambient guitar loop, airy pads, modern Turkish rap production",
     "vocal": "male",
-    "vocal_tone": "melodic male rap-singing with autotune, emotional",
-    "bpm": [138, 150],
+    "vocal_tone": "melodic male rap-singing, emotional",
+    "bpm": [
+      138,
+      150
+    ],
     "videos": "gece sürüşü, şehir ışıkları, duygusal rap editleri, futbol editleri",
     "theme_hint": "hırs, eski günler, yükselme hikâyesi, sadakat"
   },
@@ -45,7 +57,10 @@
     "sound": "afrobeats / afro-pop, log drum, syncopated percussion, warm guitar licks, shakers, summer vibe",
     "vocal": "duet",
     "vocal_tone": "playful male and female duet, smooth and sunny",
-    "bpm": [100, 110],
+    "bpm": [
+      100,
+      110
+    ],
     "videos": "yaz vlogları, tatil, plaj, arkadaş grubu, dans trendleri",
     "theme_hint": "yaz, flört, kaçamak, keyif"
   },
@@ -55,7 +70,10 @@
     "sound": "dreamy indie pop, shimmering reverb guitars, soft synth pads, gentle drum machine, nostalgic haze",
     "vocal": "female",
     "vocal_tone": "airy dreamy female vocal with lush reverb",
-    "bpm": [84, 100],
+    "bpm": [
+      84,
+      100
+    ],
     "videos": "nostaljik/duygusal editler, gün batımı, eski video kayıtları, 'ta ki seni görene kadar' tarzı editler",
     "theme_hint": "anı, ilk karşılaşma, geçmişe özlem"
   },
@@ -65,17 +83,23 @@
     "sound": "funky disco-pop, slap bass groove, rhythmic clean electric guitar, brass stabs, handclaps, bright synths",
     "vocal": "female",
     "vocal_tone": "energetic bright female pop vocal, groovy",
-    "bpm": [108, 120],
+    "bpm": [
+      108,
+      120
+    ],
     "videos": "GRWM, vlog, alışveriş, hazırlık videoları, şehir turu",
     "theme_hint": "neşe, şehirde bir gün, kendini iyi hissetmek"
   },
   {
     "id": "hyperpop",
     "label": "Hyperpop",
-    "sound": "hyperpop, glitchy bright synths, distorted 808s, pitched vocal effects, fast energetic drums, futuristic",
+    "sound": "hyperpop, glitchy bright synths, distorted 808s, fast energetic drums, futuristic",
     "vocal": "female",
-    "vocal_tone": "high-energy pitched-up female vocal, playful and bold",
-    "bpm": [150, 165],
+    "vocal_tone": "high-energy bright female vocal, playful and bold",
+    "bpm": [
+      150,
+      165
+    ],
     "videos": "hızlı geçişli editler, oyun/anime editleri, renkli estetik videolar",
     "theme_hint": "kaos, dijital dünya, kendini yeniden icat etmek"
   },
@@ -85,7 +109,10 @@
     "sound": "laid-back roots reggae, offbeat guitar skank, deep warm bass, one-drop drums, organ bubble, sunny",
     "vocal": "male",
     "vocal_tone": "relaxed warm male vocal, smiling delivery",
-    "bpm": [72, 82],
+    "bpm": [
+      72,
+      82
+    ],
     "videos": "tatil, rahatlama, hafta sonu, sahil, tembellik mizahı",
     "theme_hint": "rahatlık, dertleri boşvermek, mizah"
   },
@@ -95,7 +122,10 @@
     "sound": "anthemic pop rock, driving electric guitars, big drums, catchy riff, stadium chorus with gang vocals",
     "vocal": "male",
     "vocal_tone": "raspy energetic male rock vocal",
-    "bpm": [120, 140],
+    "bpm": [
+      120,
+      140
+    ],
     "videos": "maç/taraftar editleri, motivasyon, yolculuk, mezuniyet",
     "theme_hint": "başarmak, birlikte olmak, pes etmemek"
   },
@@ -105,7 +135,10 @@
     "sound": "smooth modern R&B, warm Rhodes keys, deep sub bass, laid-back trap-influenced drums, silky pads",
     "vocal": "female",
     "vocal_tone": "sultry smooth female R&B vocal with runs",
-    "bpm": [70, 90],
+    "bpm": [
+      70,
+      90
+    ],
     "videos": "gece estetiği, duygusal editler, kahve/yağmur videoları",
     "theme_hint": "gece düşünceleri, kararsız aşk, özlem"
   },
@@ -115,7 +148,10 @@
     "sound": "brazilian phonk / funk, distorted cowbell melody, heavy 808, aggressive drift phonk drums, dark energy",
     "vocal": "male",
     "vocal_tone": "short shouted male vocal hooks, chant style",
-    "bpm": [125, 135],
+    "bpm": [
+      125,
+      135
+    ],
     "videos": "araba drift editleri, spor/fitness, aura editleri",
     "theme_hint": "güç, hırs, durdurulamaz enerji"
   },
@@ -125,7 +161,10 @@
     "sound": "80s synthwave, analog arpeggios, gated reverb drums, retro synth bass, neon atmosphere",
     "vocal": "duet",
     "vocal_tone": "nostalgic male and female duet with retro reverb",
-    "bpm": [100, 115],
+    "bpm": [
+      100,
+      115
+    ],
     "videos": "gece sürüşü, retro estetik, şehir ışıkları",
     "theme_hint": "gece yolculuğu, retro aşk, zamanda kaybolmak"
   }

@@ -8,8 +8,8 @@ on:
         description: "Deneme süresi (sn)"
         default: "45"
       lm:
-        description: "0.6B ya da none"
-        default: "0.6B"
+        description: "1.7B, 0.6B ya da none"
+        default: "1.7B"
 
 jobs:
   test:
@@ -23,6 +23,12 @@ jobs:
       - run: sudo apt-get update -qq && sudo apt-get install -y -qq ffmpeg
       - name: Disk aç (modeller ~11 GB)
         run: sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL && df -h /
+
+      - name: Takas alanı (büyük model için RAM yedeği)
+        run: |
+          sudo swapoff -a || true
+          sudo fallocate -l 12G /mnt/swapfile && sudo chmod 600 /mnt/swapfile
+          sudo mkswap /mnt/swapfile && sudo swapon /mnt/swapfile && free -h
 
       - name: ACE-Step kur
         run: |

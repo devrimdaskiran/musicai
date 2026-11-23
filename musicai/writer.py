@@ -23,8 +23,10 @@ RULES = """KESİN KURALLAR (asla ihlal etme):
    kullanma. Konu, hikâye ve imgeler %100 yeni olacak.
 2. YASAKLI KELİMELER (hiçbir ekle, hiçbir biçimde): asfalt, beton, labirent, silüet, karanlık kuyu.
    "Betonun dili yok, silüetler konuşur" türü cümleler ve bu atmosferin klişeleri de yasak.
-3. HECE ÖLÇÜSÜ: Türkçede hece sayısı = sesli harf sayısı. Her bölümde satırlar aynı ölçüde olsun
-   (örn. hepsi 8 veya hepsi 11 hece; en fazla ±1 sapma). Her satır 6-15 hece. Satır sonlarında net durak,
+3. HECE ÖLÇÜSÜ: Türkçede hece sayısı = sesli harf sayısı. HER SATIR 7-10 HECE (asla 11'i geçme).
+   Her bölümde satırlar aynı ölçüde olsun (örn. hepsi 8 ya da hepsi 9 hece; en fazla ±1 sapma). Kısa,
+   nefes alınabilen satırlar yaz: vokal kelimeleri yutmasın, her kelime net anlaşılsın. Uzun bileşik
+   kelimeler ve art arda sert ünsüzler yerine akıcı, ağızda kolay dönen kelimeler seç. Satır sonlarında net durak,
    kafiye düzeni (aabb ya da abab) olsun. Bu sözler bir yapay zekâ müzik modeline verilecek; ölçü bozuk
    olursa vokal beat'ten kayar.
 4. YAPI: [Intro] [Verse 1] [Pre-Chorus] [Chorus] [Verse 2] [Pre-Chorus] [Chorus] [Bridge] [Chorus] [Outro]
@@ -43,12 +45,11 @@ SCHEMA = """SADECE şu anahtarlara sahip TEK bir JSON nesnesi döndür:
              yapı. 40-70 kelime. Sanatçı adı YOK.",
  "bpm": tamsayı,
  "keyscale": "örn. 'A minor'",
- "duration": saniye (150-200 arası tamsayı),
  "lyrics": "Etiketli tam Türkçe sözler, satırlar \\n ile ayrılmış",
  "hook": "Açıklamanın ilk cümlesi: merak uyandıran tek cümle, 1 emoji",
  "story": "Şarkının hikâyesi, 2-3 cümle",
  "hashtags": ["12-15 adet, '#' olmadan, Türkçe+İngilizce karışık, tarz ve video türüne uygun"],
- "cover_prompt": "İNGİLİZCE kapak görseli tarifi: sahne, ışık, renkler, sanat tarzı; içinde YAZI/HARF OLMASIN"
+ "cover_prompt": "İNGİLİZCE kapak fotoğrafı tarifi: şarkının hikâyesinden tek bir gerçekçi sahne (mekân, nesne ya da arkadan/uzaktan bir insan), ışık ve renk paleti. Gerçek bir analog plak kapağı fotoğrafı gibi; dijital sanat, 3D, fantastik efekt YOK; içinde YAZI/HARF OLMASIN"
 }"""
 
 
@@ -117,6 +118,10 @@ MEVCUT PAKET:
 Düzeltilmiş paketin tamamını aynı JSON şemasıyla döndür."""
 
 
+NATURAL = ("natural human vocal performance, clear articulate Turkish diction, every word intelligible, "
+           "expressive breathing, no robotic autotune, warm organic mix")
+
+
 def _normalize(song: dict, style: dict) -> dict:
     song["title"] = re.sub(r"\s+", " ", str(song.get("title", ""))).strip().strip('"\'')
     song["lyrics"] = str(song.get("lyrics", "")).replace("\\n", "\n").strip()
@@ -128,12 +133,21 @@ def _normalize(song: dict, style: dict) -> dict:
         song["bpm"] = int(song.get("bpm") or sum(style["bpm"]) // 2)
     except (TypeError, ValueError):
         song["bpm"] = sum(style["bpm"]) // 2
-    try:
-        song["duration"] = max(120, min(220, int(song.get("duration") or 170)))
-    except (TypeError, ValueError):
-        song["duration"] = 170
+    song["duration"] = fit_duration(song["lyrics"], song["bpm"])
+    cap = str(song.get("caption", "")).strip().rstrip(".")
+    if "diction" not in cap.lower():
+        cap = f"{cap}, {NATURAL}"
+    song["caption"] = cap
     song["style_id"], song["style_label"], song["vocal"] = style["id"], style["label"], style["vocal"]
     return song
+
+
+def fit_duration(lyrics: str, bpm: int) -> int:
+    """Süreyi söz yoğunluğuna göre ayarlar: saniyede ~2 hece + giriş/ara/çıkış müziği.
+    Süre kısa kalırsa model sözleri sıkıştırır ve kelimeler yutulur."""
+    syl = sum(checks.syllables(ln) for ln in checks.lyric_lines(lyrics))
+    rate = 2.0 if bpm < 115 else 2.4
+    return int(max(150, min(240, syl / rate + 40)))
 
 
 def write_song(st: dict, trends: list[str] | None = None, style_id: str | None = None) -> dict:

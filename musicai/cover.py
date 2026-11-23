@@ -23,7 +23,8 @@ log = logging.getLogger(__name__)
 ROOT = Path(__file__).resolve().parent.parent
 BOLD = str(ROOT / "assets/fonts/Poppins-Bold.ttf")
 MED = str(ROOT / "assets/fonts/Poppins-Medium.ttf")
-STYLE = ("album cover art, cinematic, highly detailed, striking composition, rich colors, "
+STYLE = ("vintage vinyl album cover photograph, shot on 35mm analog film, natural light, real candid photo, "
+         "subtle film grain, slightly imperfect, authentic, simple bold composition, "
          "absolutely no text, no letters, no words, no logos, no watermark")
 
 

@@ -20,7 +20,7 @@ REQUIRED = ["intro", "verse 1", "pre-chorus", "chorus", "verse 2", "bridge", "ou
 TAG = re.compile(r"^\s*\[([^\]]+)\]\s*$")
 
 # Satır uzunluğu sınırları (hece). Çok kısa satırlar ezgiyi boşaltır, çok uzunlar sıkıştırır.
-MIN_SYL, MAX_SYL = 5, 16
+MIN_SYL, MAX_SYL = 6, 11  # ACE-Step önerisi: 6-10; fazlası kelimeleri yutturur
 # Aynı bölümde satırın, bölüm ortancasından en fazla bu kadar sapmasına izin verilir.
 MAX_SPREAD = 2
 
@@ -122,8 +122,8 @@ def check(song: dict, history: list[dict]) -> list[str]:
     n_lines = len(lyric_lines(lyrics))
     if n_lines < 18:
         problems.append(f"Sözler çok kısa ({n_lines} satır); tam şarkı için en az 18 satır yaz.")
-    if n_lines > 48:
-        problems.append(f"Sözler çok uzun ({n_lines} satır); 48 satırı geçme.")
+    if n_lines > 40:
+        problems.append(f"Sözler çok uzun ({n_lines} satır); 40 satırı geçme, şarkı nefes alsın.")
     return problems
 
 

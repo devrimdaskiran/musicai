@@ -3,7 +3,7 @@
 Yapay zekâ ile üretilen, trend odaklı Türkçe şarkılar için **tamamen ücretsiz** otomatik üretim hattı.
 Pipaloo ile aynı iskelet: GitHub Actions üretir → Telegram'a "✅ Yayınla / ❌ Atla" ile gelir → onaylarsan YouTube'a yüklenir.
 
-Her gün ~16:20'de (Türkiye saati) şunlar olur:
+Haftada 2 kez (Salı ve Cuma ~16:20, Türkiye saati) şunlar olur:
 
 1. **Tarz seçimi:** `data/styles.json`daki 13 tarzdan (Anadolu Rock, Slap House, Akustik Pop, Phonk…) son kullanılmayan
    biri seçilir, vokal sırayla değişir (erkek / kadın / düet). `data/queue.json`daki tarzlar önce gelir.
@@ -12,7 +12,7 @@ Her gün ~16:20'de (Türkiye saati) şunlar olur:
 4. **Söz bekçisi** (`musicai/checks.py`) her paketi denetler, geçemeyeni modele düzelttirir (en fazla 5 tur):
    - Yasaklı kelimeler: asfalt, beton, labirent, silüet, karanlık kuyu (ekli halleri dahil)
    - Sıfır tekrar: eski şarkılarla tek bir ortak 4 kelimelik dizi bile olamaz, başlık tekrar edemez
-   - Hece ölçüsü: aynı bölümdeki satırlar ±2 hece içinde, her satır 5-16 hece
+   - Hece ölçüsü: her satır 6-11 hece (ACE-Step önerisi; kelimeler yutulmasın), aynı bölümde ±2
    - Yapı: [Intro] [Verse 1] [Pre-Chorus] [Chorus] [Verse 2] [Bridge] [Outro]
 5. **Müzik:** [ACE-Step 1.5](https://github.com/ACE-Step/ACE-Step-1.5) (açık kaynak, MIT lisansı, ticari kullanım
    serbest, Türkçe destekli) şarkıyı GitHub'ın ücretsiz makinesinde üretir. GPU gerekmez.
@@ -53,10 +53,10 @@ yanlış kanala gitmesin diye). O zaman videolar Telegram'a gelir, elle yüklers
 
 ## Ayarlar
 
-- Saat: `.github/workflows/produce.yml` → `cron` (UTC; 13:20 UTC = 16:20 TR)
+- Gün ve saat: `.github/workflows/produce.yml` → `cron` (UTC; `20 13 * * 2,5` = Salı ve Cuma 16:20 TR)
 - Yeni tarz: `data/styles.json`a ekle. Sanatçı adı yazma, sesi tarif et.
 - Sırada bekleyen tarz: `data/queue.json` (ör. `["phonk", "akustik-pop"]`)
-- Hızlı mod: üretimi elle başlatırken `lm` = `none` (kalite biraz düşer, süre kısalır)
+- Dil modeli: varsayılan `1.7B`. Hızlı mod için üretimi elle başlatırken `lm` = `0.6B` ya da `none`
 
 ## Yerel deneme (model ve Telegram olmadan)
 

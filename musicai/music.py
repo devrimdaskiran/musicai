@@ -2,7 +2,7 @@
 
 Ücretsiz çalışır: GitHub Actions'ın CPU makinesinde (GPU yoksa) ya da GPU'lu bir bilgisayarda.
 ACESTEP_DIR: ACE-Step kaynak kodunun klasörü (model dosyaları onun checkpoints/ klasörüne iner).
-MUSICAI_LM : "0.6B" (varsayılan; ses planını küçük dil modeli çıkarır, kalite artar) ya da "none" (daha hızlı).
+MUSICAI_LM : "1.7B" (varsayılan; ana paketle gelir, ACE-Step'in önerdiği), "0.6B" (daha hafif) ya da "none" (en hızlı).
 MUSICAI_STEPS: difüzyon adımı (turbo için 8 yeterli).
 """
 from __future__ import annotations
@@ -46,10 +46,10 @@ def _load():
     log.info("ACE-Step DiT hazır (%.0f sn): %s", time.time() - t0, msg[:200])
 
     llm = LLMHandler()
-    lm = os.environ.get("MUSICAI_LM", "0.6B")
+    lm = os.environ.get("MUSICAI_LM", "1.7B")
     if lm.lower() != "none":
         t0 = time.time()
-        try:  # küçük LM ana paketle gelmiyor, ayrıca indirilir (~1,2 GB)
+        try:  # 1.7B ana paketle gelir; 0.6B/4B ayrıca indirilir
             from acestep.model_downloader import ensure_lm_model
             ok, msg = ensure_lm_model(f"acestep-5Hz-lm-{lm}", checkpoints_dir=root / "checkpoints")
             log.info("LM indirme: %s", str(msg)[:150])
