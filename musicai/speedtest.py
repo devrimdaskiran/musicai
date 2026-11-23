@@ -48,8 +48,11 @@ def main() -> None:
            f"Tahmini 3 dk'lık şarkı: ~{gen_s * 180 / a.seconds / 60:.0f} dk")
     print(msg)
     if telegram.enabled():
-        telegram.send_file("sendAudio", "audio", mp3, msg, mime="audio/mpeg",
-                           extra={"title": "Deneme Turu", "performer": "MUSİCAİ test"})
+        try:
+            telegram.send_file("sendAudio", "audio", mp3, msg, mime="audio/mpeg",
+                               extra={"title": "Deneme Turu", "performer": "MUSİCAİ test"})
+        except Exception as e:
+            print("Telegram'a gönderilemedi (şarkı Artifacts'ta):", e)
 
 
 if __name__ == "__main__":

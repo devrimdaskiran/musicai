@@ -49,6 +49,12 @@ def _load():
     lm = os.environ.get("MUSICAI_LM", "0.6B")
     if lm.lower() != "none":
         t0 = time.time()
+        try:  # küçük LM ana paketle gelmiyor, ayrıca indirilir (~1,2 GB)
+            from acestep.model_downloader import ensure_lm_model
+            ok, msg = ensure_lm_model(f"acestep-5Hz-lm-{lm}", checkpoints_dir=root / "checkpoints")
+            log.info("LM indirme: %s", str(msg)[:150])
+        except Exception as e:
+            log.warning("LM indirilemedi: %s", e)
         msg, ok = llm.initialize(checkpoint_dir=str(root / "checkpoints"), lm_model_path=f"acestep-5Hz-lm-{lm}",
                                  backend="pt", device="auto", offload_to_cpu=False)
         if ok:
