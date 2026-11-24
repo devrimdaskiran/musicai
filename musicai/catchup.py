@@ -1,6 +1,6 @@
 """Yedek tetik: GitHub'ın zamanlayıcısı gecikir ya da çalışmayı atlarsa, saatlik onay işi bu kontrolü yapar.
 
-Üretim günü (Salı/Cuma, TR) saat 16:00'yı geçmiş ve bugün henüz otomatik üretim denenmemişse "run" yazar;
+Üretim günü (Salı/Cuma, TR) saat 16:00'yı geçmiş, bugün başarılı üretim yok ve deneme hakkı (3) bitmemişse "run" yazar;
 workflow bu durumda produce.yml'i auto=1 ile başlatır.
 """
 from __future__ import annotations
@@ -12,6 +12,7 @@ from . import state
 
 PRODUCE_DAYS = {1, 4}  # Pazartesi=0 → Salı=1, Cuma=4
 START_HOUR = 16
+MAX_TRIES = 3
 
 
 def tr_now() -> datetime:
@@ -22,7 +23,8 @@ def due() -> bool:
     now = tr_now()
     if now.weekday() not in PRODUCE_DAYS or now.hour < START_HOUR:
         return False
-    return state.load().get("last_auto_date") != now.strftime("%Y-%m-%d")
+    st, today = state.load(), now.strftime("%Y-%m-%d")
+    return st.get("last_auto_date") != today and st.get("auto_tries", {}).get(today, 0) < MAX_TRIES
 
 
 def main() -> None:

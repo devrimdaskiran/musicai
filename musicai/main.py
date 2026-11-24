@@ -156,17 +156,23 @@ def main() -> None:
     ap.add_argument("--dry", action="store_true", help="Telegram/Zernio yok, hafızaya yazma")
     a = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
-    if os.environ.get("MUSICAI_AUTO") == "1":
-        # Zamanlanmış/yedek tetik: aynı gün içinde yalnızca bir deneme
+    auto = os.environ.get("MUSICAI_AUTO") == "1"
+    today = catchup.tr_now().strftime("%Y-%m-%d")
+    if auto:
+        # Zamanlanmış/yedek tetik: gün başarıyla tamamlandıysa ya da 3 deneme dolduysa atla
         st = state.load()
-        today = catchup.tr_now().strftime("%Y-%m-%d")
-        if st.get("last_auto_date") == today:
-            log.info("Bugün (%s) zaten üretim yapıldı/denendi, atlandı", today)
+        tries = st.get("auto_tries", {})
+        if st.get("last_auto_date") == today or tries.get(today, 0) >= catchup.MAX_TRIES:
+            log.info("Bugün (%s) üretim tamam ya da deneme hakkı doldu, atlandı", today)
             return
-        st["last_auto_date"] = today
+        st["auto_tries"] = {today: tries.get(today, 0) + 1}
         state.save(st)
     try:
         run(a)
+        if auto:
+            st = state.load()
+            st["last_auto_date"] = today
+            state.save(st)
     except Exception as e:
         log.exception("Üretim başarısız")
         if not a.dry:

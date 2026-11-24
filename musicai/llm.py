@@ -74,15 +74,22 @@ def gemini_models() -> list[str]:
     pro = [n for n in good if "pro" in n][:1]
     flash = [n for n in good if "flash" in n and "lite" not in n][:2]
     lite = [n for n in good if "lite" in n][:1]
-    _models_cache = pro + flash + lite or good[:3]
+    # Yedek: Gemma modellerinin ücretsiz kotası Gemini'den ayrı ve çok daha geniş (Pipaloo/İş Radarı ile çakışmaz)
+    gemma = sorted((n for n in names if n.startswith("gemma") and "-it" in n and not any(b in n for b in bad)),
+                   key=lambda n: [float(x) for x in re.findall(r"\d+(?:\.\d+)?", n)] or [0], reverse=True)[:2]
+    _models_cache = (pro + flash + lite or good[:3]) + gemma
     log.info("Gemini modelleri: %s", ", ".join(_models_cache))
     return _models_cache
 
 
 def _gemini_one(model: str, prompt: str, temperature: float) -> dict:
-    base = {"responseMimeType": "application/json", "temperature": temperature}
-    variants = [{**base, "thinkingConfig": {"thinkingLevel": "low"}},
-                {**base, "thinkingConfig": {"thinkingBudget": 1024}}, base]
+    if model.startswith("gemma"):  # Gemma: JSON modu ve thinking ayarı yok, JSON metinden ayıklanır
+        variants = [{"temperature": temperature, "maxOutputTokens": 8192}]
+        prompt += "\n\nYalnızca geçerli JSON döndür; açıklama veya kod bloğu yazma."
+    else:
+        base = {"responseMimeType": "application/json", "temperature": temperature}
+        variants = [{**base, "thinkingConfig": {"thinkingLevel": "low"}},
+                    {**base, "thinkingConfig": {"thinkingBudget": 1024}}, base]
     v = n429 = busy = 0
     for attempt in range(6):
         if busy >= 2:
@@ -124,12 +131,16 @@ def gemini(prompt: str, temperature: float = 1.0) -> dict:
     if not _clean(os.environ.get("GEMINI_API_KEY")):
         raise RuntimeError("GEMINI_API_KEY yok")
     last = None
-    for m in gemini_models():
-        try:
-            return _gemini_one(m, prompt, temperature)
-        except QuotaError as e:
-            last = e
-            log.warning("%s olmadı (%s), sıradaki model", m, str(e)[:80])
+    for cycle in range(3):
+        if cycle:
+            log.info("Tüm modeller meşgul/kotada; %d dk bekleniyor", 2 * cycle)
+            time.sleep(120 * cycle)
+        for m in gemini_models():
+            try:
+                return _gemini_one(m, prompt, temperature)
+            except QuotaError as e:
+                last = e
+                log.warning("%s olmadı (%s), sıradaki model", m, re.sub(r"\s+", " ", str(e))[:160])
     raise RuntimeError(f"Gemini cevap vermedi: {last}")
 
 
