@@ -16,7 +16,7 @@ import subprocess
 from datetime import datetime, timezone
 from pathlib import Path
 
-from . import checks, cover, publish, state, telegram, trends, video, writer
+from . import catchup, checks, cover, publish, state, telegram, trends, video, writer
 
 ROOT = Path(__file__).resolve().parent.parent
 OUT = ROOT / "out"
@@ -157,10 +157,14 @@ def main() -> None:
     a = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     if os.environ.get("MUSICAI_AUTO") == "1":
-        if state.recently("produce", 120):
-            log.info("Son 2 saatte zaten üretim yapıldı, atlandı")
+        # Zamanlanmış/yedek tetik: aynı gün içinde yalnızca bir deneme
+        st = state.load()
+        today = catchup.tr_now().strftime("%Y-%m-%d")
+        if st.get("last_auto_date") == today:
+            log.info("Bugün (%s) zaten üretim yapıldı/denendi, atlandı", today)
             return
-        state.mark("produce")
+        st["last_auto_date"] = today
+        state.save(st)
     try:
         run(a)
     except Exception as e:

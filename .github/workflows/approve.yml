@@ -8,6 +8,7 @@ on:
 
 permissions:
   contents: write
+  actions: write
 
 concurrency:
   group: musicai-approve
@@ -19,6 +20,8 @@ jobs:
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main  # gecikmeli çalışmalar da en güncel hafızayı görsün
       - uses: actions/setup-python@v5
         with:
           python-version: "3.12"
@@ -30,6 +33,22 @@ jobs:
           ZERNIO_API_KEY: ${{ secrets.ZERNIO_API_KEY }}
           ZERNIO_ACCOUNT_ID: ${{ secrets.ZERNIO_ACCOUNT_ID }}
         run: python -m musicai.approve
+      - name: Kaçan üretim var mı? (yedek tetik)
+        id: catchup
+        run: python -m musicai.catchup
+      - name: Kaçan üretimi başlat
+        if: steps.catchup.outputs.result == 'run'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          busy=$(gh run list -R "$GITHUB_REPOSITORY" --workflow produce.yml --limit 5 --json status \
+                 --jq '[.[] | select(.status != "completed")] | length')
+          if [ "$busy" = "0" ]; then
+            gh workflow run produce.yml -R "$GITHUB_REPOSITORY" --ref main -f auto=1
+            echo "Üretim yedek tetikle başlatıldı"
+          else
+            echo "Üretim zaten çalışıyor"
+          fi
       - name: Hafızayı kaydet
         if: always()
         run: |

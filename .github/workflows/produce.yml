@@ -9,6 +9,9 @@ on:
       style:
         description: "Tarz kimliği (boş = otomatik). Örn: anadolu-rock-70s, slap-house, akustik-pop, phonk"
         default: ""
+      auto:
+        description: "Otomatik mod (yedek tetik kullanır; elle çalıştırırken boş bırak)"
+        default: ""
       lm:
         description: "ACE-Step dil modeli: 0.6B (önerilen), 1.7B (çok yavaş, saatler sürebilir) ya da none (en hızlı)"
         default: "0.6B"
@@ -26,6 +29,8 @@ jobs:
     timeout-minutes: 330
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: main  # gecikmeli çalışmalar da en güncel hafızayı görsün
 
       - uses: actions/setup-python@v5
         with:
@@ -61,7 +66,7 @@ jobs:
           ACESTEP_DIR: ace
           MUSICAI_STYLE: ${{ github.event.inputs.style || '' }}
           MUSICAI_LM: ${{ github.event.inputs.lm || '0.6B' }}
-          MUSICAI_AUTO: ${{ github.event_name == 'schedule' && '1' || '' }}
+          MUSICAI_AUTO: ${{ (github.event_name == 'schedule' || github.event.inputs.auto == '1') && '1' || '' }}
           HF_HUB_DISABLE_PROGRESS_BARS: "1"
         run: python -m musicai.main
 
