@@ -1,7 +1,8 @@
-"""Yedek tetik: GitHub'ın zamanlayıcısı gecikir ya da çalışmayı atlarsa, saatlik onay işi bu kontrolü yapar.
+"""Yedek tetik: GitHub'ın zamanlayıcısı gecikir/atlarsa ya da üretim çökerse saatlik onay işi bu kontrolü yapar.
 
-Üretim günü (Salı/Cuma, TR) saat 16:00'yı geçmiş, bugün başarılı üretim yok ve deneme hakkı (3) bitmemişse "run" yazar;
-workflow bu durumda produce.yml'i auto=1 ile başlatır.
+- Üretim günü (Salı/Cuma, TR) 16:00'dan sonra o günün şarkısı yoksa -> "run"
+- Üretim gününün şarkısı hiç çıkmadıysa ertesi gün 10:00'dan sonra telafi -> "run"
+- Aynı gün en fazla 3 otomatik deneme (sonsuz döngü olmasın)
 """
 from __future__ import annotations
 
@@ -10,8 +11,9 @@ from datetime import datetime, timedelta, timezone
 
 from . import state
 
-PRODUCE_DAYS = {1, 4}  # Pazartesi=0 → Salı=1, Cuma=4
+PRODUCE_DAYS = {1, 4}  # Pazartesi=0 -> Salı=1, Cuma=4
 START_HOUR = 16
+MAKEUP_HOUR = 10
 MAX_TRIES = 3
 
 
@@ -19,12 +21,21 @@ def tr_now() -> datetime:
     return datetime.now(timezone.utc) + timedelta(hours=3)
 
 
-def due() -> bool:
-    now = tr_now()
-    if now.weekday() not in PRODUCE_DAYS or now.hour < START_HOUR:
+def due(now: datetime | None = None, st: dict | None = None) -> bool:
+    now = now or tr_now()
+    st = st if st is not None else state.load()
+    today = now.strftime("%Y-%m-%d")
+    if st.get("auto_tries", {}).get(today, 0) >= MAX_TRIES:
         return False
-    st, today = state.load(), now.strftime("%Y-%m-%d")
-    return st.get("last_auto_date") != today and st.get("auto_tries", {}).get(today, 0) < MAX_TRIES
+    last = st.get("last_auto_date", "")  # son BAŞARILI otomatik üretimin günü
+    if last == today:
+        return False
+    if now.weekday() in PRODUCE_DAYS and now.hour >= START_HOUR:
+        return True
+    yday = now - timedelta(days=1)
+    if yday.weekday() in PRODUCE_DAYS and now.hour >= MAKEUP_HOUR:
+        return last < yday.strftime("%Y-%m-%d")  # dünkü şarkı çıkmadıysa telafi
+    return False
 
 
 def main() -> None:

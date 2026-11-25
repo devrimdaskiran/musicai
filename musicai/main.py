@@ -162,8 +162,8 @@ def main() -> None:
         # Zamanlanmış/yedek tetik: gün başarıyla tamamlandıysa ya da 3 deneme dolduysa atla
         st = state.load()
         tries = st.get("auto_tries", {})
-        if st.get("last_auto_date") == today or tries.get(today, 0) >= catchup.MAX_TRIES:
-            log.info("Bugün (%s) üretim tamam ya da deneme hakkı doldu, atlandı", today)
+        if not catchup.due(st=st):
+            log.info("Şu an (%s) üretim zamanı değil, bugünkü şarkı tamam ya da deneme hakkı doldu; atlandı", today)
             return
         st["auto_tries"] = {today: tries.get(today, 0) + 1}
         state.save(st)

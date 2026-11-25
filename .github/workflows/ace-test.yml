@@ -37,6 +37,7 @@ jobs:
       - name: Deneme şarkısı
         env:
           ACESTEP_DIR: ace
+          ACESTEP_GENERATION_TIMEOUT: "10800"  # CPU'da tam şarkı ~20-40 dk; varsayılan 600 sn yetmiyor
           MUSICAI_LM: ${{ github.event.inputs.lm }}
           TELEGRAM_BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}

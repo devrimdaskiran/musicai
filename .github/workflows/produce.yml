@@ -64,6 +64,7 @@ jobs:
           YOUTUBE_API_KEY: ${{ secrets.YOUTUBE_API_KEY }}
           POLLINATIONS_TOKEN: ${{ secrets.POLLINATIONS_TOKEN }}
           ACESTEP_DIR: ace
+          ACESTEP_GENERATION_TIMEOUT: "10800"  # CPU'da tam şarkı ~20-40 dk; varsayılan 600 sn yetmiyor
           MUSICAI_STYLE: ${{ github.event.inputs.style || '' }}
           MUSICAI_LM: ${{ github.event.inputs.lm || '0.6B' }}
           MUSICAI_AUTO: ${{ (github.event_name == 'schedule' || github.event.inputs.auto == '1') && '1' || '' }}
