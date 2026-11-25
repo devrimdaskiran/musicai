@@ -13,6 +13,19 @@
     "theme_hint": "hikâye anlatan ozan damarı: göç, emek, sevda, memleket özlemi, dostluk; ağır ve şiirsel ama sade dil"
   },
   {
+    "id": "anadolu-groove-live",
+    "label": "Anadolu Groove (Live)",
+    "sound": "live band session recording, 1970s Anatolian psychedelic folk-rock spirit blended with modern urban groove, electric baglama riffs, warm fuzz guitar, deep groovy bass line, tight live drums with a modern punchy kick, hand percussion (darbuka), subtle Hammond organ, warm room ambience and light audience energy, analog tape warmth",
+    "vocal": "male",
+    "vocal_tone": "warm emotional male vocal, raw and intimate live delivery, slight grit, heartfelt longing",
+    "bpm": [
+      100,
+      116
+    ],
+    "videos": "duygusal ve nostaljik editler, konser/canlı performans editleri, gece şehir yürüyüşü, sevgiliye adanan videolar",
+    "theme_hint": "karşılık bekleyen sevda, bir bakışla değişen hayat, gece ve şehir, özlem; sade, söylenebilir, kalbe dokunan dil; nakarat tek kelimelik ya da kısa tekrarlı bir kanca olsun"
+  },
+  {
     "id": "akustik-pop",
     "label": "Akustik Pop",
     "sound": "intimate acoustic pop, fingerpicked acoustic guitar, soft piano, light shaker and claps, warm room reverb",
