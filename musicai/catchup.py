@@ -21,13 +21,27 @@ def tr_now() -> datetime:
     return datetime.now(timezone.utc) + timedelta(hours=3)
 
 
+def last_song_day() -> str:
+    """state/songs içindeki en yeni şarkının TR tarihi (elle başlatılan üretimler de sayılır)."""
+    days = []
+    for song in state.songs():
+        d = song.get("date")  # "YYYY-MM-DD HH:MM" (UTC)
+        if d:
+            try:
+                t = datetime.strptime(d, "%Y-%m-%d %H:%M") + timedelta(hours=3)
+                days.append(t.strftime("%Y-%m-%d"))
+            except ValueError:
+                pass
+    return max(days, default="")
+
+
 def due(now: datetime | None = None, st: dict | None = None) -> bool:
     now = now or tr_now()
     st = st if st is not None else state.load()
     today = now.strftime("%Y-%m-%d")
     if st.get("auto_tries", {}).get(today, 0) >= MAX_TRIES:
         return False
-    last = st.get("last_auto_date", "")  # son BAŞARILI otomatik üretimin günü
+    last = max(st.get("last_auto_date", ""), last_song_day())  # son BAŞARILI üretimin günü (elle olanlar dahil)
     if last == today:
         return False
     if now.weekday() in PRODUCE_DAYS and now.hour >= START_HOUR:
