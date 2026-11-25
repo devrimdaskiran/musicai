@@ -65,7 +65,18 @@ def main() -> None:
     if not telegram.enabled():
         log.info("Telegram kapalı")
         return
+    info = telegram.webhook_info()
+    log.info("Telegram: bekleyen güncelleme=%s, webhook=%s, son hata=%s", info.get("pending_update_count"),
+             "VAR" if info.get("url") else "yok", info.get("last_error_message"))
+    if info.get("url"):
+        log.error("Bu bota bir webhook bağlı (%s); getUpdates çalışmaz. Webhook başka bir sisteme ait olabilir.",
+                  info["url"].split("/")[2] if "//" in info["url"] else "?")
     updates = telegram.get_updates(st.get("tg_offset"))
+    if not updates and st.get("tg_offset") and info.get("pending_update_count"):
+        log.warning("Kayıtlı offset bekleyen güncellemeleri gizliyor; offset sıfırlanıyor")
+        updates = telegram.get_updates(None)
+    log.info("Gelen güncelleme: %d (%s)", len(updates),
+             ", ".join(sorted({k for u in updates for k in u if k != "update_id"})) or "-")
     offset, done = st.get("tg_offset"), 0
     for u in updates:
         offset = u["update_id"] + 1

@@ -119,6 +119,14 @@ def get_updates(offset: int | None) -> list[dict]:
     return _check(requests.get(_api("getUpdates"), params=params, timeout=30), "getUpdates").json().get("result", [])
 
 
+def webhook_info() -> dict:
+    try:
+        return requests.get(_api("getWebhookInfo"), timeout=30).json().get("result", {})
+    except Exception as e:
+        log.warning("getWebhookInfo: %s", e)
+        return {}
+
+
 def answer_callback(cb_id: str, text: str) -> None:
     try:
         requests.post(_api("answerCallbackQuery"), data={"callback_query_id": cb_id, "text": text[:190]}, timeout=30)
