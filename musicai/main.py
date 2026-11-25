@@ -127,7 +127,7 @@ def run(args) -> dict:
     telegram.send_file("sendDocument", "document", d / "paket.txt",
                        "📋 5 bölümlük paket: sözler, açıklama, hashtag'ler (TikTok/Reels için kopyala)", mime="text/plain")
     cap = (f"📱 Short / TikTok / Reels kesiti\n{item['title']}\n\n"
-           + ("Beğendiysen ✅ Yayınla: tam şarkı + Short YouTube'a yüklenir (en geç 1 saat)."
+           + ("Beğendiysen ✅ Yayınla: tam şarkı + Short YouTube'a yüklenir (onay işi bir sonraki çalışmasında, ~15 dk içinde)."
               if auto else "Otomatik yükleme kapalı: videoları buradan indirip elle yükleyebilirsin."))
     sent = telegram.send_file("sendVideo", "video", short, cap, key=key if auto else None, mime="video/mp4",
                               extra={"supports_streaming": "true", "width": 1080, "height": 1920})

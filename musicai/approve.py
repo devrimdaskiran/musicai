@@ -1,4 +1,4 @@
-"""Onay: Telegram'daki "✅ Yayınla / ❌ Atla" butonlarını işler (saatte bir çalışır).
+"""Onay: Telegram'daki "✅ Yayınla / ❌ Atla" butonlarını işler (cron-job.org ile ~15 dk.da bir).
 
 Yayınla -> tam şarkı videosu (kapak görseliyle) + 40 sn'lik Short, YouTube'a aynı başlıkla yüklenir.
 """
