@@ -5,6 +5,7 @@ Yayınla -> tam şarkı videosu (kapak görseliyle) + 40 sn'lik Short, YouTube'a
 from __future__ import annotations
 
 import logging
+import os
 
 from . import publish, state, telegram
 
@@ -62,6 +63,11 @@ def main() -> None:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
     st = state.load()
     telegram.set_chat(st.get("chat_id"))
+    manual = os.environ.get("MUSICAI_PUBLISH", "").strip()
+    if manual:  # GitHub'dan elle: "son" = en yeni bekleyen şarkı, ya da şarkı anahtarı
+        pend = state.pending()
+        key = sorted(pend)[-1] if manual == "son" and pend else manual
+        log.info("Elle yayın: %s -> %s", key, "tamam" if handle("pub", key, None, None) else "olmadı")
     if not telegram.enabled():
         log.info("Telegram kapalı")
         return
