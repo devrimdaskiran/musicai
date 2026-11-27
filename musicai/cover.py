@@ -38,8 +38,9 @@ def fetch_art(prompt: str, seed: int, size: int = 1024) -> Image.Image | None:
     if token:
         routes.append(("https://gen.pollinations.ai/image/" + q, {"Authorization": f"Bearer {token}"}))
     routes.append(("https://image.pollinations.ai/prompt/" + q, {}))
-    for url, headers in routes:
-        for attempt in range(3):
+    # Ücretsiz katman: IP başına 45 sn'de 1 görsel, yoğun saatlerde 503. Sabırla ~8 dk dene.
+    for attempt in range(8):
+        for url, headers in routes:
             try:
                 r = requests.get(url, params=params, headers=headers, timeout=180)
                 if r.ok and r.headers.get("content-type", "").startswith("image"):
@@ -47,11 +48,9 @@ def fetch_art(prompt: str, seed: int, size: int = 1024) -> Image.Image | None:
                     w, h = img.size  # köşe filigranı olasılığına karşı hafif kırp
                     return img.crop((int(w * .04), int(h * .04), int(w * .96), int(h * .96))).resize((size, size))
                 log.warning("Pollinations %s: %s", r.status_code, r.text[:120])
-                if r.status_code in (401, 402, 403) and headers:
-                    break
             except Exception as e:
                 log.warning("Pollinations hatası: %s", e)
-            time.sleep(20 * (attempt + 1))
+        time.sleep(60)
     return None
 
 
@@ -97,7 +96,11 @@ def _wrap(draw, text: str, font_path: str, max_w: int, start: int) -> tuple[list
 
 def make_cover(song: dict, out: Path, seed: int) -> Path:
     """1080x1080 kapak (YouTube kapak görseli ve videoların temeli)."""
-    art = fetch_art(song.get("cover_prompt") or song["caption"], seed) or fallback_art(seed)
+    art = fetch_art(song.get("cover_prompt") or song["caption"], seed)
+    if art is None:
+        log.warning("Kapak görseli alınamadı, yedek desen kullanılıyor")
+        song["cover_fallback"] = True
+        art = fallback_art(seed)
     S = 1080
     img = art.resize((S, S), Image.LANCZOS)
     # alt kısma okunurluk için koyu geçiş

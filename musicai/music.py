@@ -34,6 +34,9 @@ def _load():
     if _dit is not None:
         return _dit, _llm
     root = _ace_dir()
+    import torch
+    # Bir çekirdeği GitHub'ın kendi ajanına bırak: tüm CPU'yu kaplamak "runner lost communication" hatasına yol açtı
+    torch.set_num_threads(max(1, (os.cpu_count() or 4) - 1))
     from acestep.handler import AceStepHandler
     from acestep.llm_inference import LLMHandler
 

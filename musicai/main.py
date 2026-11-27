@@ -121,7 +121,9 @@ def run(args) -> dict:
     # 5) Telegram: kapak + tam şarkı + paket + butonlu Short önizleme
     auto = bool(item.get("full_url"))
     concept = song.get("concept", "")
-    telegram.send_file("sendPhoto", "photo", cv, f"🎵 {item['title']}\n\n{concept}"[:1024], mime="image/jpeg")
+    warn = ("⚠️ Kapak servisi yoğundu, yedek desen kullanıldı. Beğenmezsen ❌ deyip üretimi yeniden başlatabilirsin.\n\n"
+            if song.get("cover_fallback") else "")
+    telegram.send_file("sendPhoto", "photo", cv, f"{warn}🎵 {item['title']}\n\n{concept}"[:1024], mime="image/jpeg")
     telegram.send_file("sendAudio", "audio", mp3, "🎧 Tam şarkı", mime="audio/mpeg",
                        extra={"title": song["title"], "performer": "MUSİCAİ"})
     telegram.send_file("sendDocument", "document", d / "paket.txt",
