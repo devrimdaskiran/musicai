@@ -1,11 +1,13 @@
 {
  "recent_styles": [
-  "anadolu-rock-70s"
+  "anadolu-rock-70s",
+  "anadolu-groove-live"
  ],
  "tg_offset": 373287807,
  "chat_id": "5539245520",
  "auto_tries": {
-  "2026-11-25": 1
+  "2026-11-27": 1
  },
- "last_vocal": "male"
+ "last_vocal": "male",
+ "last_auto_date": "2026-11-27"
 }
